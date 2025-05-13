@@ -3,6 +3,8 @@ import ResourceDisplay from './ResourceDisplay';
 import Generator from './Generator';
 import Upgrade from './Upgrade';
 import { initialState, saveGame, loadGame } from '../lib/gameState';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
 
 export default function Game() {
   // Initialize game state
@@ -126,51 +128,60 @@ export default function Game() {
   };
   
   return (
-    <div className="bg-white shadow-xl rounded-lg p-6">
-      <ResourceDisplay coins={gameState.coins} coinsPerSecond={gameState.generators.clickRate * gameState.generators.clickMultiplier} />
-      
-      {/* Main clicker button */}
-      <div className="my-8 text-center">
-        <button 
-          onClick={handleClick}
-          className="bg-yellow-500 hover:bg-yellow-600 text-white text-xl font-bold py-4 px-8 rounded-full transition transform hover:scale-105 active:scale-95"
-        >
-          Click For Coins (+{gameState.clickPower.toFixed(1)})
-        </button>
-      </div>
-      
-      {/* Generators section */}
-      <div className="my-8">
-        <h2 className="text-2xl font-bold mb-4">Generators</h2>
-        <div className="space-y-4">
-          {Object.keys(gameState.availableGenerators).map(generatorId => (
-            <Generator 
-              key={generatorId}
-              generator={gameState.availableGenerators[generatorId]}
-              level={gameState.generators.levels[generatorId] || 0}
-              canAfford={gameState.coins >= gameState.availableGenerators[generatorId].cost}
-              onBuy={() => buyGenerator(generatorId)}
-            />
-          ))}
-        </div>
-      </div>
-      
-      {/* Upgrades section */}
-      <div className="my-8">
-        <h2 className="text-2xl font-bold mb-4">Upgrades</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {Object.keys(gameState.availableUpgrades)
-            .filter(id => !gameState.purchasedUpgrades.includes(id))
-            .map(upgradeId => (
-              <Upgrade
-                key={upgradeId}
-                upgrade={gameState.availableUpgrades[upgradeId]}
-                canAfford={gameState.coins >= gameState.availableUpgrades[upgradeId].cost}
-                onBuy={() => buyUpgrade(upgradeId)}
-              />
-            ))}
-        </div>
-      </div>
-    </div>
+    <Tabs>
+        <TabList>
+            <Tab>Tab 1</Tab>
+            <Tab>Tab 2</Tab>
+        </TabList>
+        <TabPanel>
+            <div className="bg-white shadow-xl rounded-lg p-6">
+            <ResourceDisplay coins={gameState.coins} coinsPerSecond={gameState.generators.clickRate * gameState.generators.clickMultiplier} />
+            
+            {/* Main clicker button */}
+            <div className="my-8 text-center">
+                <button 
+                onClick={handleClick}
+                className="bg-yellow-500 hover:bg-yellow-600 text-white text-xl font-bold py-4 px-8 rounded-full transition transform hover:scale-105 active:scale-95"
+                >
+                Click For Coins (+{gameState.clickPower.toFixed(1)})
+                </button>
+            </div>
+            
+            {/* Generators section */}
+            <div className="my-8">
+                <h2 className="text-2xl font-bold mb-4">Generators</h2>
+                <div className="space-y-4">
+                {Object.keys(gameState.availableGenerators).map(generatorId => (
+                    <Generator 
+                    key={generatorId}
+                    generator={gameState.availableGenerators[generatorId]}
+                    level={gameState.generators.levels[generatorId] || 0}
+                    canAfford={gameState.coins >= gameState.availableGenerators[generatorId].cost}
+                    onBuy={() => buyGenerator(generatorId)}
+                    />
+                ))}
+                </div>
+            </div>
+            
+            {/* Upgrades section */}
+            <div className="my-8">
+                <h2 className="text-2xl font-bold mb-4">Upgrades</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {Object.keys(gameState.availableUpgrades)
+                    .filter(id => !gameState.purchasedUpgrades.includes(id))
+                    .map(upgradeId => (
+                    <Upgrade
+                        key={upgradeId}
+                        upgrade={gameState.availableUpgrades[upgradeId]}
+                        canAfford={gameState.coins >= gameState.availableUpgrades[upgradeId].cost}
+                        onBuy={() => buyUpgrade(upgradeId)}
+                    />
+                    ))}
+                </div>
+            </div>
+            </div>
+        </TabPanel>
+        <TabPanel></TabPanel>
+    </Tabs>
   );
 }
